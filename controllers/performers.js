@@ -3,7 +3,8 @@ const Movie = require('../models/movie');
 
 module.exports = {
   new: newPerformer,
-  create
+  create,
+  addToCast
 };
 
 async function newPerformer(req, res) {
@@ -26,4 +27,16 @@ async function create(req, res) {
     console.log(err);
   }
   res.redirect('/performers/new');
+}
+
+async function addToCast(req, res) {
+  const movie = await Movie.findById(req.params.id);
+  // the cast array holds the performer's ObjectID (referencing)
+  // console.log(movie);
+  movie.cast.push(req.body.performerId);
+  // console.log(movie.cast.push);
+  console.log(req.body);
+  await movie.save();
+  // console.log(movie.save);
+  res.redirect(`/movies/${movie._id}`);
 }
